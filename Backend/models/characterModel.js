@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const characterSchema = new Schema(
   {
-    characterID: {
+    characterId: {
       type: String,
       required: true,
     },

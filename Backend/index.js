@@ -9,6 +9,7 @@ const uri = process.env.MONGO_URI;
 
 const UsrController = require("./controllers/userController");
 const AuthController = require("./controllers/authController");
+const CharactersController = require("./controllers/charactersController");
 const Middleware = require("./middleware/authMiddleware");
 
 mongoose
@@ -122,7 +123,7 @@ app.delete("/users/:id/delete", Middleware.verify, async (req, res) => {
   }
 });
 
-// Edito roldes del usuario
+// Edito roles del usuario
 app.put("/users/:id/editRoles", Middleware.verify, async (req, res) => {
   const roles = req.body.roles;
   try {
@@ -155,3 +156,74 @@ app.put("/users/:id/editActive", Middleware.verify, async (req, res) => {
 //-------------------------------------------------------------------------------------------------------
 // ENDPOINTS CHARACTER
 //-------------------------------------------------------------------------------------------------------
+
+//Get de todos los personajes
+app.get("/characters", async (req, res) => {
+  let limit = req.query.limit;
+  let offset = req.query.offset;
+
+  try {
+    const results = await CharactersController.getAllCharacters(limit, offset);
+    res.status(200).json(results);
+  } catch (error) {
+    res.status(500).send("Error. Intente más tarde");
+  }
+});
+
+//Get info de un personaje
+app.get("/characters/:id", Middleware.verify, async (req, res) => {
+  let characterId = req.params.id;
+
+  try {
+    character = await CharactersController.getCharacter(characterId);
+    res.status(200).json(character);
+  } catch (error) {
+    res.status(500).send("Error. Intente más tarde");
+  }
+});
+
+//Creo nuevo personaje
+app.post("/characters/create", Middleware.verify, async (req, res) => {
+  let createdBy = req.body.createdBy;
+  let characterId = req.body.characterId;
+  let name = req.body.lastname;
+  let faceImage = req.body.faceImage;
+  let upperBody = req.body.upperBody;
+  let lowerBody = req.body.lowerBody;
+  let shoes = req.body.shoes;
+
+  try {
+    const result = await CharactersController.createCharacter(
+      createdBy,
+      characterId,
+      name,
+      faceImage,
+      upperBody,
+      lowerBody,
+      shoes
+    );
+    if (result) {
+      res.status(201).send("Personaje creado correctamente");
+    } else {
+      res.status(409).send("El personaje ya existe");
+    }
+  } catch (error) {
+    res.status(500).send("Error al crear el personaje");
+  }
+});
+
+//Edito personaje
+
+//Elimino personaje
+app.delete("/characters/:id/delete", Middleware.verify, async (req, res) => {
+  try {
+    const result = await CharactersController.deleteCharacter(req.params.id);
+    if (result) {
+      res.status(200).send("Personaje borrado.");
+    } else {
+      res.status(404).send("No se ha podido eliminar el personaje.");
+    }
+  } catch (error) {
+    res.status(500).send("Error");
+  }
+});

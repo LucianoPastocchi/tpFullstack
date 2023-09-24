@@ -27,7 +27,7 @@ const getCharactersByUser = async (userId) => {
 
 const createCharacter = async (
   userId,
-  characterID,
+  characterId,
   name,
   faceImage,
   upperBody,
@@ -40,7 +40,7 @@ const createCharacter = async (
     return false;
   } else {
     const character = new Character({
-      characterID: characterID,
+      characterId: characterId,
       name: name,
       faceImage: faceImage,
       upperBody: upperBody,
