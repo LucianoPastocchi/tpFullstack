@@ -213,6 +213,20 @@ app.post("/characters/create", Middleware.verify, async (req, res) => {
 });
 
 //Edito personaje
+app.put("/characters/:id/edit", Middleware.verify, async (req, res) => {
+  const character = { _id: req.params.id, ...req.body };
+
+  try {
+    const result = await CharactersController.editCharacter(character);
+    if (result) {
+      res.status(200).json(result);
+    } else {
+      res.status(404).send("El personaje no existe");
+    }
+  } catch (error) {
+    res.status(500).send("Error");
+  }
+});
 
 //Elimino personaje
 app.delete("/characters/:id/delete", Middleware.verify, async (req, res) => {
