@@ -42,22 +42,22 @@ GET, POST, PUT, DELETE
 
 ENPOINTS PARA EL USUARIO:
 
-/login: POST para que el usuario inice sesión
-/users: GET de todos los usuarios
-/users/:id: GET de info de un usuario
-/users/create: POST para crear un usuario
-/users/:id/edit: PUT para editar un usuario
-/users/:id/delete: DELETE para eliminar usuario
-/users/:id/editRoles: PUT para editar los roles de un usuario
-/users/:id/editActive: PUT para editar el parámetro isActive del usuario
+<br>/login: POST para que el usuario inice sesión<br>
+<br>/users: GET de todos los usuarios<br>
+<br>/users/:id: GET de info de un usuario<br>
+<br>/users/create: POST para crear un usuario<br>
+<br>/users/:id/edit: PUT para editar un usuario<br>
+<br>/users/:id/delete: DELETE para eliminar usuario<br>
+<br>/users/:id/editRoles: PUT para editar los roles de un usuario<br>
+<br>/users/:id/editActive: PUT para editar el parámetro isActive del usuario<br>
 
 ENDPOINTS PARA LOS PERSONAJES:
 
-/characters: GET de todos los personajes
-/characters/:id: GET de la info de un personaje
-/characters/create: POST para crear un personaje
-/characters/:id/edit: PUT para editar el personaje
-/characters/:id/delete: DELETE para eliminar el personaje
+<br>/characters: GET de todos los personajes<br>
+<br>/characters/:id: GET de la info de un personaje<br>
+<br>/characters/create: POST para crear un personaje<br>
+<br>/characters/:id/edit: PUT para editar el personaje<br>
+<br>/characters/:id/delete: DELETE para eliminar el personaje<br>
 
 <h3>CONSIDERACIONES FUNCIONALES</h3>
 
