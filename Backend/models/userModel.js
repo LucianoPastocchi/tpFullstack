@@ -28,6 +28,9 @@ const usrSchema = new Schema(
       type: String,
       required: true,
     },
+    createdCharacters: [
+      { type: mongoose.Schema.Types.ObjectId, ref: "character" },
+    ],
   },
   { timestamps: true }
 ).set("toJSON", {
