@@ -1,30 +1,56 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
 import Header from "../components/Header";
-import BackgroundImage from "../components/BackgroundImage";
 import styled from "styled-components";
-import { firebaseAuth } from "../utils/firebase-config";
 
 const LoginPage = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const [formValues, setFormValues] = useState({ email: "", password: "" });
+  const email = useRef("");
+  const password = useRef("");
 
-  const handleLogin = async () => {
-    try {
-      await signInWithEmailAndPassword(firebaseAuth, email, password);
-    } catch (error) {
-      console.log(error);
-    }
+  const loginData = {
+    email: email.current.value,
+    password: password.current.value,
   };
 
-  onAuthStateChanged(firebaseAuth, (currentUser) => {
-    if (currentUser) navigate("/");
-  }); //redirije si ya esta ingresado el usuario
+  const handleLogin = async () => {
+    fetch("http://localhost:4000/login", {
+      method: "POST",
+      headers: {
+        Accept: "Application/json",
+        "Content-type": "Application/json",
+      },
+
+      body: JSON.stringify(loginData),
+    })
+      .then((response) => {
+        console.log(response.status);
+        if (response.status !== 401 && response.status !== 500) {
+          response.json();
+          alert("Login correcto");
+          //window.open("login.html");
+          navigate("/");
+          //this.close();
+        } else {
+          console.log("Error al logearse");
+          alert("Error al logearse ");
+        }
+      })
+      .then((data) => {
+        console.log(data);
+      })
+      .catch((err) => {
+        console.log("Error al logearse", err);
+        alert("Error al logearse " + err);
+      });
+  };
+
+  // onAuthStateChanged(firebaseAuth, (currentUser) => {
+  //   if (currentUser) navigate("/");
+  // }); //redirije si ya esta ingresado el usuario
   return (
     <Wrapper>
-      <BackgroundImage />
       <div className="loginContent">
         <Header />
         <div className="form-wrapper">
@@ -34,16 +60,30 @@ const LoginPage = () => {
             </div>
             <div className="container">
               <input
-                onChange={(e) => setEmail(e.target.value)}
-                value={email}
                 type="email"
                 placeholder="email"
+                name="email"
+                value={formValues.email}
+                ref={email}
+                onChange={(e) =>
+                  setFormValues({
+                    ...formValues,
+                    [e.target.name]: e.target.value,
+                  })
+                }
               />
               <input
-                onChange={(e) => setPassword(e.target.value)}
-                value={password}
                 type="password"
                 placeholder="password"
+                name="password"
+                value={formValues.password}
+                ref={password}
+                onChange={(e) =>
+                  setFormValues({
+                    ...formValues,
+                    [e.target.name]: e.target.value,
+                  })
+                }
               />
               <button onClick={handleLogin}>Login</button>
             </div>

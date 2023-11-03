@@ -7,10 +7,7 @@ const Header = (props) => {
   return (
     <HeaderContainer>
       <div className="logo">
-        <img
-          src="https://res.cloudinary.com/ehizeex-shop/image/upload/v1668265433/NetflixApp/2560px-Netflix_2015_logo.svg_rbicwl_knwp6f.png"
-          alt="no internet connection"
-        />
+        <h2>Mis personajes</h2>
       </div>
       <button onClick={() => navigate(props.login ? "/login" : "/signup")}>
         {props.login ? "Log In " : "Sign In"}
@@ -24,11 +21,15 @@ const HeaderContainer = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: 1.5rem;
-  .logo {
-    img {
-      height: 3rem;
-      cursor: pointer;
-    }
+  h2 {
+    padding: 0.5rem;
+    background-color: red;
+    border: none;
+    cursor: pointer;
+    color: white;
+    border-radius: 0.2rem;
+    font-weight: bolder;
+    font-size: 1.05rem;
   }
   button {
     padding: 0.5rem;

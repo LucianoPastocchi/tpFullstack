@@ -1,80 +1,120 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import styled from "styled-components";
-import {
-  createUserWithEmailAndPassword,
-  onAuthStateChanged,
-} from "firebase/auth";
-import { firebaseAuth } from "../utils/firebase-config";
 import Header from "../components/Header";
-import BackgroundImage from "../components/BackgroundImage";
 import { useNavigate } from "react-router-dom";
 
 const SignUpPage = () => {
-  const [showPass, setShowPass] = useState(false);
   const [formValues, setFormValues] = useState({ email: "", password: "" });
+
+  const email = useRef("");
+  const name = useRef("");
+  const lastname = useRef("");
+  const password = useRef("");
+
+  const userData = {
+    email: email.current.value,
+    name: name.current.value,
+    lastname: lastname.current.value,
+    isActive: true,
+    roles: "user",
+    password: password.current.value,
+  };
 
   const navigate = useNavigate();
 
   const handleSignIn = async () => {
-    try {
-      const { email, password } = formValues;
-      await createUserWithEmailAndPassword(firebaseAuth, email, password);
-    } catch (error) {
-      console.log(error);
-    }
+    fetch("http://localhost:4000/users/create", {
+      method: "POST",
+      headers: {
+        Accept: "Application/json",
+        "Content-type": "Application/json",
+      },
+
+      body: JSON.stringify(userData),
+    })
+      .then((response) => {
+        response.json();
+        alert("Usuario creado correctamente");
+        //window.open("login.html");
+        navigate("/login");
+        //this.close();
+      })
+      .then((data) => {
+        console.log(data);
+      })
+      .catch((err) => {
+        console.log("Error al crear usuario", err);
+        alert("Error al crear el usuario " + err);
+      });
   };
 
-  onAuthStateChanged(firebaseAuth, (currentUser) => {
-    if (currentUser) navigate("/");
-  });
+  // onAuthStateChanged(firebaseAuth, (currentUser) => {
+  //   if (currentUser) navigate("/");
+  // });
 
   return (
     <Container>
-      <BackgroundImage />
       <div className="content">
         <Header login />
         <div className="body">
           <div className="text">
-            <h1>Unlimited movies, Tv shows and more</h1>
-            <h4>Watch anywhere, cancel anytime</h4>
-            <h6>
-              Ready to watch? Enter your email to create or restart membership
-            </h6>
+            <h1>Crea tu propio personaje</h1>
           </div>
           <div className="form">
-            {showPass ? (
-              <input
-                type="password"
-                placeholder="password"
-                name="password"
-                value={formValues.password}
-                onChange={(e) =>
-                  setFormValues({
-                    ...formValues,
-                    [e.target.name]: e.target.value,
-                  })
-                }
-              />
-            ) : (
-              <input
-                type="email"
-                placeholder="email"
-                name="email"
-                value={formValues.email}
-                onChange={(e) =>
-                  setFormValues({
-                    ...formValues,
-                    [e.target.name]: e.target.value,
-                  })
-                }
-              />
-            )}
+            <input
+              type="email"
+              placeholder="email"
+              name="email"
+              value={formValues.email}
+              ref={email}
+              onChange={(e) =>
+                setFormValues({
+                  ...formValues,
+                  [e.target.name]: e.target.value,
+                })
+              }
+            />
+            <input
+              type="name"
+              placeholder="name"
+              name="name"
+              value={formValues.name}
+              ref={name}
+              onChange={(e) =>
+                setFormValues({
+                  ...formValues,
+                  [e.target.name]: e.target.value,
+                })
+              }
+            />
+            <input
+              type="lastname"
+              placeholder="lastname"
+              name="lastname"
+              value={formValues.lastname}
+              ref={lastname}
+              onChange={(e) =>
+                setFormValues({
+                  ...formValues,
+                  [e.target.name]: e.target.value,
+                })
+              }
+            />
+            <input
+              type="password"
+              placeholder="password"
+              name="password"
+              value={formValues.password}
+              ref={password}
+              onChange={(e) =>
+                setFormValues({
+                  ...formValues,
+                  [e.target.name]: e.target.value,
+                })
+              }
+            />
 
-            {!showPass ? (
-              <button onClick={() => setShowPass(true)}>Get Started</button>
-            ) : (
-              <button onClick={handleSignIn}>Sign Up</button>
-            )}
+            <button onClick={handleSignIn}>Sign Up</button>
           </div>
         </div>
       </div>
@@ -119,26 +159,26 @@ const Container = styled.div`
     display: grid;
     width: 60%;
     margin-top: 1.5rem;
-    grid-template-columns: ${({ showPass }) =>
-      showPass ? "1fr 1fr" : "2fr 1fr"};
-    input {
-      color: black;
-      padding: 1.5rem;
-      font-size: 1.2rem;
-      width: 45rem;
-      &:focus {
-        outline: none;
-      }
+    grid-template-columns: "1fr 1fr";
+  }
+  input {
+    color: black;
+    padding: 1.5rem;
+    font-size: 1.2rem;
+    width: 45rem;
+    &:focus {
+      outline: none;
     }
-    button {
-      padding: 0.5rem 1rem;
-      background-color: red;
-      border: none;
-      cursor: pointer;
-      color: white;
-      font-size: 1.05rem;
-      width: 20rem;
-    }
+  }
+
+  button {
+    padding: 0.5rem 1rem;
+    background-color: red;
+    border: none;
+    cursor: pointer;
+    color: white;
+    font-size: 1.05rem;
+    width: 20rem;
   }
 `;
 
