@@ -4,7 +4,12 @@ import Header from "../components/Header";
 import { useNavigate } from "react-router-dom";
 
 const SignUpPage = () => {
-  const [formValues, setFormValues] = useState({ email: "", password: "" });
+  const [formValues, setFormValues] = useState({
+    email: "",
+    password: "",
+    name: "",
+    lastname: "",
+  });
 
   const email = useRef("");
   const name = useRef("");
