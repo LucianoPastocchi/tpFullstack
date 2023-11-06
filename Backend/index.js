@@ -92,6 +92,7 @@ app.post(
     let email = req.body.email;
     let isActive = req.body.isActive;
     let password = req.body.password;
+    let myCharacters = req.body.myCharacters;
 
     try {
       const result = await UsrController.addUser(
@@ -99,7 +100,8 @@ app.post(
         lastname,
         email,
         isActive,
-        password
+        password,
+        myCharacters
       );
       if (result) {
         res.status(201).send("Usuario creado correctamente");
@@ -220,23 +222,23 @@ app.get(
 app.post(
   "/characters/create",
   /*Middleware.verify*/ async (req, res) => {
-    let createdBy = req.body.createdBy;
     let characterId = req.body.characterId;
-    let name = req.body.lastname;
+    let name = req.body.name;
     let faceImage = req.body.faceImage;
     let upperBody = req.body.upperBody;
     let lowerBody = req.body.lowerBody;
     let shoes = req.body.shoes;
+    let createdBy = req.body.createdBy;
 
     try {
       const result = await CharactersController.createCharacter(
-        createdBy,
         characterId,
         name,
         faceImage,
         upperBody,
         lowerBody,
-        shoes
+        shoes,
+        createdBy
       );
       if (result) {
         res.status(201).send("Personaje creado correctamente");
