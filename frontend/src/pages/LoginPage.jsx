@@ -21,8 +21,8 @@ const LoginPage = () => {
         {
           method: "GET",
           headers: {
-            Accept: "application/json", // Cambiado a "application/json" en lugar de "Application/json"
-            "Content-Type": "application/json", // Cambiado a "application/json" en lugar de "Application/json"
+            Accept: "application/json",
+            "Content-Type": "application/json",
           },
         }
       );
@@ -30,7 +30,7 @@ const LoginPage = () => {
       console.log(response.status);
 
       if (response.status !== 401 && response.status !== 500) {
-        const data = await response.json(); // Esperar la resolución de la promesa
+        const data = await response.json();
         console.log("data");
         console.log(data);
         window.localStorage.setItem(
@@ -80,9 +80,6 @@ const LoginPage = () => {
       });
   };
 
-  // onAuthStateChanged(firebaseAuth, (currentUser) => {
-  //   if (currentUser) navigate("/");
-  // }); //redirije si ya esta ingresado el usuario
   return (
     <Wrapper>
       <div className="loginContent">

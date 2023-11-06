@@ -98,7 +98,6 @@ const CreateCharacter = () => {
           console.log("Personaje editado correctamente");
         } else {
           console.log("Error al editar el personaje");
-          alert("Error al editar el personaje ");
         }
       })
       .then((data) => {
@@ -106,7 +105,6 @@ const CreateCharacter = () => {
       })
       .catch((err) => {
         console.log("Error al crear personaje", err);
-        alert("Error al crear el personaje " + err);
       });
   };
 

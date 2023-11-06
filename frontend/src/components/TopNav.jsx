@@ -11,17 +11,10 @@ const TopNav = ({ isScrolled }) => {
       name: "Home",
       link: "/",
     },
-    {
-      name: "My characters",
-      link: "/tv",
-    },
+
     {
       name: "Create character",
       link: "/character/create",
-    },
-    {
-      name: "Trending",
-      link: "/movies",
     },
   ];
 

@@ -2,34 +2,40 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { AiOutlineInfoCircle } from "react-icons/ai";
 import { FaPlay } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
-//import { useDispatch, useSelector } from "react-redux";
-
 import TopNav from "../components/TopNav";
-//import { fetchMovies, getGenres } from "../store/index";
 import SliderContainer from "../components/SliderContainer";
 
 const HomePage = () => {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [characters, setCharacters] = useState([]);
 
-  const navigate = useNavigate();
+  const getCharacters = async () => {
+    try {
+      const response = await fetch("http://localhost:4000/characters", {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      });
 
-  //const movies = useSelector((state) => state.netflix.movies);
-  //const genresLoaded = useSelector((state) => state.netflix.generesLoaded);
+      console.log(response.status);
 
-  //const dispatch = useDispatch();
+      if (response.status !== 401 && response.status !== 500) {
+        const data = await response.json();
+        console.log("data");
+        console.log(data);
+        setCharacters(data);
+      }
+    } catch (err) {
+      console.log("Error al obtener el usuario", err);
+      alert("Error al obtener el usuario " + err);
+    }
+  };
 
   useEffect(() => {
-    //dispatch(getGenres());
-  }, []);
-
-  const getCharacters = () => {};
-
-  //   useEffect(() => {
-  //     //if (genresLoaded) {
-  //       //dispatch(fetchMovies({ type: "all" }));
-  //     }
-  //   });
+    getCharacters();
+  });
 
   window.onscroll = () => {
     setIsScrolled(window.pageYOffset === 0 ? false : true); //si no scrolleo
@@ -48,8 +54,38 @@ const HomePage = () => {
           />
         </div>
         <div className="container">
-          <div className="title">
-            <h1>My Characters</h1>
+          <div className="charactersMap">
+            <ul className="character-list">
+              {characters.map((character) => (
+                <div className="character-item" key={character.id}>
+                  <li className="characterName">{character.name}</li>
+                  <li>
+                    <img
+                      className="body-parts"
+                      src={character.faceImage}
+                      alt=""
+                    />
+                  </li>
+                  <li>
+                    <img
+                      className="body-parts"
+                      src={character.upperBody}
+                      alt=""
+                    />
+                  </li>
+                  <li>
+                    <img
+                      className="body-parts"
+                      src={character.lowerBody}
+                      alt=""
+                    />
+                  </li>
+                  <li>
+                    <img className="body-parts" src={character.shoes} alt="" />
+                  </li>
+                </div>
+              ))}
+            </ul>
           </div>
         </div>
       </div>
@@ -59,6 +95,37 @@ const HomePage = () => {
 };
 
 const HomeContainer = styled.div`
+  .characterName {
+    color: red;
+    margin-bottom: 20px;
+  }
+  .charactersMap {
+    display: flex;
+    flex-wrap: wrap; /* Para permitir que los elementos se envuelvan en columnas */
+    gap: 20px; /* Espacio entre elementos */
+  }
+
+  .character-list {
+    list-style: none; /* Quita los puntos de la lista */
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap; /* Para permitir que los elementos se envuelvan en columnas */
+    gap: 20px; /* Espacio entre elementos */
+  }
+
+  .character-item {
+    border: 1px solid #ccc;
+    padding: 10px;
+    width: calc(25% - 20px); /* Ancho del 25% con espacio entre elementos */
+    box-sizing: border-box;
+  }
+
+  .body-parts {
+    margin-right: 200px;
+    max-width: 100px;
+    height: auto;
+  }
   .hero {
     position: relative;
     .background-image {
@@ -79,6 +146,7 @@ const HomeContainer = styled.div`
           background: -webkit-linear-gradient(#eee, rgb(128, 13, 13));
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
+          margin-top: 500px;
         }
         p {
           margin-bottom: -50px;
