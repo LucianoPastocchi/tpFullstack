@@ -8,11 +8,18 @@ const getAllUsers = async (limit, offset) => {
 };
 
 const getUser = async (id) => {
-  const user = await Usr.findById(id);
+  const user = await Usr.findOne({ email: id });
   return user;
 };
 
-const addUser = async (name, lastname, email, isActive, password) => {
+const addUser = async (
+  name,
+  lastname,
+  email,
+  isActive,
+  password,
+  myCharacters
+) => {
   let existUser = await Usr.findOne({ email: email });
   if (!existUser) {
     const cryptoPass = require("crypto")
@@ -26,6 +33,7 @@ const addUser = async (name, lastname, email, isActive, password) => {
       email: email,
       isActive: isActive,
       password: cryptoPass,
+      myCharacters: myCharacters,
     });
 
     let user = await usr.save();
