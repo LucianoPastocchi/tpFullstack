@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import TopNav from "../components/TopNav";
@@ -10,7 +10,9 @@ const CreateCharacter = () => {
     upperBody: "",
     lowerBody: "",
     shoes: "",
+    createdBy: "",
   });
+
   const [isScrolled, setIsScrolled] = useState(false);
 
   const handleInputChange = (event) => {
@@ -19,12 +21,13 @@ const CreateCharacter = () => {
   };
 
   const characterData = {
-    characterId: "1",
+    characterId: 1,
     name: formValues.name,
     faceImage: formValues.faceImage,
     upperBody: formValues.upperBody,
     lowerBody: formValues.lowerBody,
     shoes: formValues.shoes,
+    createdBy: window.localStorage.getItem("loggedUser"),
   };
 
   const navigate = useNavigate();

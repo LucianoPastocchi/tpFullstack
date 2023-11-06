@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import styled from "styled-components";
@@ -12,6 +12,70 @@ const LoginPage = () => {
   const loginData = {
     email: email.current.value,
     password: password.current.value,
+  };
+
+  const getMyCharacters = async () => {
+    fetch("http://localhost:4000/users/" + email.current.value, {
+      method: "GET",
+      headers: {
+        Accept: "Application/json",
+        "Content-type": "Application/json",
+      },
+    })
+      .then((response) => {
+        console.log(response.status);
+        if (response.status !== 401 && response.status !== 500) {
+          response.json();
+          const myCharacters = response.data;
+          console.log(" myCharacters: ");
+          console.log(myCharacters);
+          window.localStorage.setItem(
+            "characterCount"
+            //JSON.stringify(response.data.myCharacters)
+          );
+          fetch("http://localhost:4000/login", {
+            method: "POST",
+            headers: {
+              Accept: "Application/json",
+              "Content-type": "Application/json",
+            },
+
+            body: JSON.stringify(loginData),
+          })
+            .then((response) => {
+              console.log(response.status);
+              if (response.status !== 401 && response.status !== 500) {
+                response.json();
+                alert("Login correcto");
+                navigate("/");
+                window.localStorage.setItem(
+                  "loggedUser",
+                  JSON.stringify(email.current.value)
+                );
+              } else {
+                console.log("Error al logearse");
+                alert("Error al logearse ");
+              }
+            })
+            .then((data) => {
+              console.log(data);
+            })
+            .catch((err) => {
+              console.log("Error al logearse", err);
+              alert("Error al logearse " + err);
+            });
+        } else {
+          console.log("Error al logearse");
+          alert("Error al logearse ");
+        }
+      })
+      .then((data) => {
+        console.log(data);
+      })
+      .catch((err) => {
+        console.log("Error al logearse", err);
+        alert("Error al logearse " + err);
+      });
   };
 
   const handleLogin = async () => {
@@ -29,9 +93,14 @@ const LoginPage = () => {
         if (response.status !== 401 && response.status !== 500) {
           response.json();
           alert("Login correcto");
-          //window.open("login.html");
+          getMyCharacters();
           navigate("/");
-          //this.close();
+          window.localStorage.setItem(
+            "loggedUser",
+            JSON.stringify(email.current.value)
+          );
+
+          window.localStorage.setItem("lastId", JSON.stringify());
         } else {
           console.log("Error al logearse");
           alert("Error al logearse ");
