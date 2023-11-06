@@ -13,6 +13,8 @@ const CreateCharacter = () => {
     createdBy: "",
   });
 
+  const userId = window.localStorage.getItem("userId").replace(/['"]+/g, "");
+
   const [isScrolled, setIsScrolled] = useState(false);
 
   const handleInputChange = (event) => {
@@ -21,13 +23,13 @@ const CreateCharacter = () => {
   };
 
   const characterData = {
-    characterId: 1,
+    characterId: parseInt(window.localStorage.getItem("lastId")) + 1,
     name: formValues.name,
     faceImage: formValues.faceImage,
     upperBody: formValues.upperBody,
     lowerBody: formValues.lowerBody,
     shoes: formValues.shoes,
-    createdBy: window.localStorage.getItem("loggedUser"),
+    createdBy: window.localStorage.getItem("loggedUser").replace(/['"]+/g, ""),
   };
 
   const navigate = useNavigate();
@@ -54,11 +56,49 @@ const CreateCharacter = () => {
           response.json();
           alert("Personaje creado correctamente");
           //window.open("login.html");
+          updateMyCharacters();
+          console.log(characterData.characterId);
           navigate("/");
           //this.close();
         } else {
           console.log("Error al crearse el personaje");
           alert("Error al crearse el personaje ");
+        }
+      })
+      .then((data) => {
+        console.log(data);
+      })
+      .catch((err) => {
+        console.log("Error al crear personaje", err);
+        alert("Error al crear el personaje " + err);
+      });
+  };
+
+  const updateMyCharacters = async () => {
+    fetch("http://localhost:4000/users/" + userId + "/edit", {
+      method: "PUT",
+      headers: {
+        Accept: "Application/json",
+        "Content-type": "Application/json",
+      },
+      body: JSON.stringify({
+        myCharacters: characterData.characterId,
+      }),
+    })
+      .then((response) => {
+        console.log(response.status);
+        if (
+          response.status !== 401 &&
+          response.status !== 500 &&
+          response.status !== 409 &&
+          response.status !== 404
+        ) {
+          response.json();
+          console.log(userId.replace(/['"]+/g, ""));
+          console.log("Personaje editado correctamente");
+        } else {
+          console.log("Error al editar el personaje");
+          alert("Error al editar el personaje ");
         }
       })
       .then((data) => {

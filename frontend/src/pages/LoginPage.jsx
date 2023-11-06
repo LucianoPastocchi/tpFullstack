@@ -15,67 +15,34 @@ const LoginPage = () => {
   };
 
   const getMyCharacters = async () => {
-    fetch("http://localhost:4000/users/" + email.current.value, {
-      method: "GET",
-      headers: {
-        Accept: "Application/json",
-        "Content-type": "Application/json",
-      },
-    })
-      .then((response) => {
-        console.log(response.status);
-        if (response.status !== 401 && response.status !== 500) {
-          response.json();
-          const myCharacters = response.data;
-          console.log(" myCharacters: ");
-          console.log(myCharacters);
-          window.localStorage.setItem(
-            "characterCount"
-            //JSON.stringify(response.data.myCharacters)
-          );
-          fetch("http://localhost:4000/login", {
-            method: "POST",
-            headers: {
-              Accept: "Application/json",
-              "Content-type": "Application/json",
-            },
-
-            body: JSON.stringify(loginData),
-          })
-            .then((response) => {
-              console.log(response.status);
-              if (response.status !== 401 && response.status !== 500) {
-                response.json();
-                alert("Login correcto");
-                navigate("/");
-                window.localStorage.setItem(
-                  "loggedUser",
-                  JSON.stringify(email.current.value)
-                );
-              } else {
-                console.log("Error al logearse");
-                alert("Error al logearse ");
-              }
-            })
-            .then((data) => {
-              console.log(data);
-            })
-            .catch((err) => {
-              console.log("Error al logearse", err);
-              alert("Error al logearse " + err);
-            });
-        } else {
-          console.log("Error al logearse");
-          alert("Error al logearse ");
+    try {
+      const response = await fetch(
+        `http://localhost:4000/users/${email.current.value}`,
+        {
+          method: "GET",
+          headers: {
+            Accept: "application/json", // Cambiado a "application/json" en lugar de "Application/json"
+            "Content-Type": "application/json", // Cambiado a "application/json" en lugar de "Application/json"
+          },
         }
-      })
-      .then((data) => {
+      );
+
+      console.log(response.status);
+
+      if (response.status !== 401 && response.status !== 500) {
+        const data = await response.json(); // Esperar la resolución de la promesa
+        console.log("data");
         console.log(data);
-      })
-      .catch((err) => {
-        console.log("Error al logearse", err);
-        alert("Error al logearse " + err);
-      });
+        window.localStorage.setItem(
+          "lastId",
+          JSON.stringify(data.myCharacters)
+        );
+        window.localStorage.setItem("userId", JSON.stringify(data.id));
+      }
+    } catch (err) {
+      console.log("Error al obtener el usuario", err);
+      alert("Error al obtener el usuario " + err);
+    }
   };
 
   const handleLogin = async () => {
@@ -99,8 +66,6 @@ const LoginPage = () => {
             "loggedUser",
             JSON.stringify(email.current.value)
           );
-
-          window.localStorage.setItem("lastId", JSON.stringify());
         } else {
           console.log("Error al logearse");
           alert("Error al logearse ");
